@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Letter — Meet's Safe Place</title>
+
+  <!-- Fonts (same as site) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Core styles (load in this order) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+
+  <style>
+    /* -------------------------
+       letter.css (page-specific)
+       Keeps tokens consistent with site variables.css
+       ------------------------- */
+
+    :root{
+      --bg:#FFF9F7;
+      --paper:#FFFDF9;
+      --ink:#2b2b2b;
+      --muted:#7a7a7a;
+      --accent:#FFDCE8;
+      --lav:#E7D8FF;
+      --radius:14px;
+      --card-shadow: 0 18px 40px rgba(20,20,20,0.06);
+      --ease-soft: cubic-bezier(.2,.9,.3,1);
+      --hand: "Dancing Script", cursive;
+      --heading: "Playfair Display", serif;
+      --body: "Poppins", system-ui, sans-serif;
+    }
+
+    /* Page layout */
+    body.page-fade { background: var(--bg); font-family:var(--body); color:var(--ink); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    .container { max-width:1100px; margin:0 auto; padding:28px 20px; box-sizing:border-box; }
+
+    .stack { display:flex; flex-direction:column; gap:18px; align-items:center; }
+
+    .title { font-family:var(--heading); font-size:clamp(26px,4vw,36px); margin:0; color:var(--ink); }
+    .handwritten.small { font-family:var(--hand); color:var(--muted); margin:0; }
+
+    /* Envelope stage */
+    .letter-stage { padding:36px 0 80px; display:flex; flex-direction:column; align-items:center; gap:18px; }
+
+    .envelope-wrapper { display:flex; flex-direction:column; align-items:center; gap:14px; }
+
+    /* Envelope container */
+    .envelope {
+      width:360px;
+      max-width:92vw;
+      height:240px;
+      position:relative;
+      perspective:1200px;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Envelope front/back */
+    .envelope-front, .envelope-back {
+      position:absolute;
+      inset:0;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,250,248,0.98), rgba(255,255,255,0.96));
+      box-shadow: var(--card-shadow);
+      border:1px solid rgba(0,0,0,0.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:visible;
+    }
+
+    /* Flap */
+    .flap {
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:56%;
+      transform-origin: top center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,248,0.96));
+      border-bottom-left-radius:12px;
+      border-bottom-right-radius:12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      border:1px solid rgba(0,0,0,0.03);
+      z-index:30;
+      transition: transform 900ms var(--ease-soft);
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
+
+    .envelope-front .envelope-seal {
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      background: radial-gradient(circle at 40% 30%, var(--accent), var(--lav));
+      box-shadow: 0 8px 30px rgba(191,104,150,0.08), inset 0 -4px 8px rgba(0,0,0,0.06);
+      transform: translateY(6px);
+    }
+
+    /* Letter (hidden under flap) */
+    .letter {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 18%;
+    bottom: 12px;
+
+    /* Round all 4 corners */
+    border-radius: 16px;
+
+    background: linear-gradient(180deg, var(--paper), #fff);
+
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+
+    padding: 22px;
+    box-sizing: border-box;
+
+    transform-origin: top center;
+    transform: translateY(18px) scale(0.98);
+
+    opacity: 0;
+
+    transition:
+        transform 700ms var(--ease-soft),
+        opacity 420ms var(--ease-soft);
+
+    z-index: 10;
+
+    overflow: auto;
+
+    /* Ensures the rounded shape is respected */
+    clip-path: inset(0 round 16px);
+}
+    /* Paper texture (subtle) */
+    .letter-paper {
+      background-image:
+        linear-gradient(transparent 0 2px, rgba(0,0,0,0.01) 2px),
+        linear-gradient(90deg, rgba(0,0,0,0.01) 0 1px, transparent 1px);
+      background-size: 100% 28px, 28px 100%;
+      padding:8px 12px;
+      border-radius:8px;
+      min-height:160px;
+    }
+
+    .letter-header { margin-bottom:8px; }
+    .letter-salutation { font-family:var(--hand); font-size:20px; margin:0; color:var(--ink); }
+
+    .letter-body { font-family:var(--hand); color:var(--ink); line-height:1.6; font-size:16px; outline:none; }
+    .letter-body p { margin:12px 0; }
+
+    .closing { margin-top:12px; font-style:italic; color:var(--ink); }
+    .signature { margin-top:14px; font-family:var(--hand); font-size:16px; }
+
+    /* Envelope opened states (applied by JS) */
+    .envelope.open .flap { transform: rotateX(-180deg) translateY(-6px); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .envelope.open .letter { transform: translateY(0) scale(1); opacity:1; }
+
+    /* Small animation for letter text reveal */
+    .letter.revealed .letter-body { opacity:1; transform: none; transition: opacity 700ms var(--ease-soft) 220ms, transform 700ms var(--ease-soft) 220ms; }
+    .letter .letter-body { opacity:0; transform: translateY(6px) scale(0.998); }
+
+    /* Controls */
+    .letter-controls { display:flex; gap:10px; align-items:center; margin-top:6px; }
+    .btn { padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:600; background:white; box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: transform 220ms var(--ease-soft); }
+    .btn-primary { background: linear-gradient(90deg,var(--accent),var(--lav)); color:#222; }
+    .btn-outline { background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--ink); }
+
+    /* Piano toggle small */
+    .piano-toggle { display:flex; gap:10px; align-items:center; font-size:14px; color:var(--muted); }
+    .piano-toggle .switch { width:44px; height:26px; }
+
+    /* Ending animation (gentle fade + scale) */
+    .letter-end {
+      margin-top:18px;
+      text-align:center;
+      opacity:0;
+      transform: translateY(8px) scale(0.998);
+      transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft);
+    }
+    .letter.revealed + .letter-end { opacity:1; transform: translateY(0) scale(1); }
+
+    /* Responsive */
+    @media(max-width:520px) {
+      .envelope { height:220px; }
+      .letter { top:20%; left:10px; right:10px; padding:16px; }
+      .title { font-size:22px; }
+    }
+
+    /* Accessibility focus */
+    .envelope:focus { box-shadow: 0 0 0 6px rgba(231,216,255,0.12); border-radius:12px; outline:none; }
+
+    /* small muted */
+    .text-muted { color:var(--muted); font-size:13px; }
+
+    /* ensure envelope click target is obvious on mobile */
+    .envelope[aria-expanded="false"] { touch-action: manipulation; }
+
+    /* subtle finishing flourish for signature */
+    .signature .heart { color:#e2557a; margin-left:6px; }
+
+    
+
+    /* Letter page — compact navigation only */
+body.page-fade .site-header .navbar {
+  min-height: 56px;
+}
+
+body.page-fade .site-header .nav-inner {
+  min-height: 56px;
+  height: 56px;
+}
+
+body.page-fade .site-header .nav-logo,
+body.page-fade .site-header .nav-links {
+  min-height: 56px;
+  height: 56px;
+}
+  </style>
+</head>
+<body class="page-fade">
+
+  <!-- Header / Navigation (same as other pages) -->
+  <header class="site-header nav-visible" role="banner">
+    <nav class="navbar" role="navigation" aria-label="Primary">
+      <div class="nav-inner container" role="group" aria-label="Main navigation">
+        <a class="nav-logo" href="index.html">
+          <span class="brand-name">Meet's Safe Place</span>
+          <span class="brand-handwritten" aria-hidden="true">♡</span>
+        </a>
+
+        <ul id="nav-menu" class="nav-links" role="menubar" aria-label="Primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html" aria-current="page">Letter</a></li>
+        </ul>
+
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+          <span class="sr-only">Open menu</span>
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="nav-overlay" aria-hidden="true" id="nav-overlay">
+      <div class="container">
+        <ul class="nav-links" role="menu" aria-label="Mobile primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html" aria-current="page">Letter</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Decorative layers (floating petals, soft lighting, rain) -->
+  <div class="decor-layer" aria-hidden="true">
+    <span class="petal petal-1 float" role="presentation"></span>
+    <span class="petal petal-2 float-slow" role="presentation"></span>
+    <span class="star star-1" role="presentation"></span>
+    <div class="rain" role="presentation"></div>
+  </div>
+
+  <!-- Main content -->
+  <main id="main" class="container" role="main">
+    <section class="section letter-section" aria-labelledby="letter-title">
+      <div class="stack center letter-stage">
+
+        <h1 id="letter-title" class="title">A Letter for Meet</h1>
+        <p class="handwritten small">Open the envelope when you're ready. Take your time — this page is yours.</p>
+
+        <!-- Envelope component (interactive) -->
+        <div class="envelope-wrapper" aria-hidden="false">
+          <div id="envelope" class="envelope" role="region" aria-label="Envelope. Click to open the letter." tabindex="0" aria-expanded="false">
+            <div class="flap" id="envelope-flap" aria-hidden="true"></div>
+
+            <!-- Letter content (hidden until envelope opens) -->
+            <article id="letter" class="letter card glass-card" role="article" aria-hidden="true">
+              <div class="letter-paper">
+                <header class="letter-header">
+                  <h2 class="handwritten letter-salutation">Dear Meet,</h2>
+                </header>
+
+                <div class="letter-body handwritten" id="letter-body" tabindex="0" aria-live="polite">
+                  <p>There are days when the world feels heavy and the future looks like a long, echoing hallway. I wish I could sit beside you in every one of those moments — to hold your hand, to make you tea, to remind you of the small steady things that keep you going.</p>
+
+                  <p>I see how hard you try. I see the late nights, the quiet worries, the tiny victories you barely notice. You are learning, growing, and becoming — and none of that is wasted. Even when things feel uncertain, your kindness, curiosity, and courage are already more than enough.</p>
+
+                  <p>When the noise gets loud, come back here. Breathe with the page, listen to the soft piano, and remember that you are not defined by a single day or a single result. You are loved for who you are — not for what you achieve.</p>
+
+                  <p class="closing">Whenever life becomes too loud,<br>
+                  I hope this little place reminds you<br>
+                  how deeply loved you are.</p>
+
+                  <p class="signature">Love,<br>
+                  <span class="handwritten">Swarali <span class="heart">❤️</span></span></p>
+                </div>
+              </div>
+            </article>
+
+            <!-- Envelope front (visible before opening) -->
+            <div class="envelope-front" aria-hidden="true">
+              <div class="envelope-seal" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+           <center>
+          <div class="letter-controls" role="group" aria-label="Letter controls">
+            <button id="open-envelope" class="btn btn-primary" aria-controls="envelope" aria-expanded="false">Open Letter</button>
+            <button id="close-letter" class="btn btn-outline" aria-controls="envelope" aria-expanded="true" hidden>Close</button>
+                </center>
+        <!-- Soft note -->
+      
+
+        <!-- Elegant ending animation placeholder -->
+        <div class="letter-end small muted" aria-hidden="true">
+          <p>Take a breath. Stay a while.</p>
+        </div>
+        <div class="row" style="width:100%; margin-top:var(--space-lg); align-items:center; justify-content:space-between;">
+          <a class="btn btn-outline" href="calm.html" role="button" aria-label="Previous page: Music">← Previous</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="row" style="align-items:center;justify-content:space-between;">
+        <div class="col small">© <span aria-hidden="true">♡</span> Swarali — Made for Meet</div>
+      </div>
+    </div>
+  </footer>
+
+  
+
+  <!-- Scripts -->
+  <script src="js/navbar.js" defer></script>
+  <script src="js/cursor.js" defer></script>
+
+  <!-- Page script: letter interactions -->
+  <script>
+    /**
+     * js/letter.js (inline)
+     * - Envelope open/close animation
+     * - Letter reveal and text animation
+     * - Piano toggle (no autoplay; requires user interaction)
+     * - Accessible keyboard support
+     * - Session persistence for piano preference
+     */
+
+    (function () {
+      'use strict';
+
+      // Elements
+      const envelope = document.getElementById('envelope');
+      const flap = document.getElementById('envelope-flap');
+      const letter = document.getElementById('letter');
+      const openBtn = document.getElementById('open-envelope');
+      const closeBtn = document.getElementById('close-letter');
+      const pianoToggle = document.getElementById('piano-enable');
+      const audio = document.getElementById('letter-piano');
+      const letterBody = document.getElementById('letter-body');
+      const letterEnd = document.querySelector('.letter-end');
+
+      const STORAGE_KEY = 'msp_letter_piano_enabled';
+
+      // Defensive checks
+      if (!envelope || !letter || !openBtn) return;
+
+      // Utility: set aria-expanded on envelope and buttons
+      function setEnvelopeOpen(isOpen) {
+        envelope.classList.toggle('open', isOpen);
+        envelope.setAttribute('aria-expanded', String(!!isOpen));
+        openBtn.setAttribute('aria-expanded', String(!!isOpen));
+        closeBtn.hidden = !isOpen;
+        openBtn.hidden = !!isOpen;
+        // reveal letter content after flap animation completes
+        if (isOpen) {
+          // small delay to let flap rotate
+          setTimeout(() => {
+            letter.setAttribute('aria-hidden', 'false');
+            letter.classList.add('revealed');
+            // focus the letter body for screen readers
+            if (letterBody) letterBody.focus({ preventScroll: true });
+            // show ending flourish
+            if (letterEnd) letterEnd.setAttribute('aria-hidden', 'false');
+          }, 520);
+        } else {
+          // hide letter content
+          letter.classList.remove('revealed');
+          letter.setAttribute('aria-hidden', 'true');
+          if (letterEnd) letterEnd.setAttribute('aria-hidden', 'true');
+        }
+      }
+
+      // Open envelope (click or keyboard)
+      function openEnvelope(e) {
+        e && e.preventDefault();
+        if (envelope.classList.contains('open')) return;
+        envelope.classList.add('open');
+        setEnvelopeOpen(true);
+        // gentle finishing flourish: after reveal, animate signature slightly
+        setTimeout(() => {
+          const sig = letter.querySelector('.signature');
+          if (sig) sig.animate([{ transform: 'translateY(6px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 700, easing: 'cubic-bezier(.2,.9,.3,1)' });
+        }, 900);
+      }
+
+      // Close envelope
+      function closeEnvelope(e) {
+        e && e.preventDefault();
+        if (!envelope.classList.contains('open')) return;
+        envelope.classList.remove('open');
+        setEnvelopeOpen(false);
+      }
+
+      // Toggle piano playback (requires user gesture)
+      function setPianoEnabled(enabled, { userInitiated = false } = {}) {
+        try {
+          if (!audio) {
+            // no audio present: persist preference but do nothing
+            if (enabled) sessionStorage.setItem(STORAGE_KEY, '1'); else sessionStorage.removeItem(STORAGE_KEY);
+            return;
+          }
+          if (enabled) {
+            // stop other audio on page (defensive)
+            document.querySelectorAll('audio').forEach(a => {
+              if (a !== audio) { a.pause(); a.currentTime = 0; }
+            });
+            // attempt to play (may be blocked until user interacts)
+            const playPromise = audio.play();
+            if (playPromise && playPromise.then) {
+              playPromise.then(() => {
+                // success
+                sessionStorage.setItem(STORAGE_KEY, '1');
+              }).catch(() => {
+                // play blocked; still persist preference but remain paused
+                sessionStorage.setItem(STORAGE_KEY, '1');
+              });
+            } else {
+              sessionStorage.setItem(STORAGE_KEY, '1');
+            }
+          } else {
+            audio.pause();
+            audio.currentTime = 0;
+            sessionStorage.removeItem(STORAGE_KEY);
+          }
+        } catch (err) {
+          console.warn('piano toggle error', err);
+        }
+      }
+
+      // Restore piano preference (do not autoplay)
+      function restorePianoPreference() {
+        try {
+          const pref = sessionStorage.getItem(STORAGE_KEY);
+          if (pref === '1') {
+            // mark toggle checked but do not autoplay
+            if (pianoToggle) pianoToggle.checked = true;
+            // if audio exists, keep it paused until user interacts
+            // (we do not call play here to respect no-autoplay)
+          } else {
+            if (pianoToggle) pianoToggle.checked = false;
+          }
+        } catch (e) {}
+      }
+
+      // Keyboard accessibility: Enter/Space opens envelope when focused
+      envelope.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          if (!envelope.classList.contains('open')) openEnvelope(ev);
+        } else if (ev.key === 'Escape') {
+          if (envelope.classList.contains('open')) closeEnvelope(ev);
+        }
+      });
+
+      // Click handlers
+      envelope.addEventListener('click', openEnvelope);
+      openBtn.addEventListener('click', openEnvelope);
+      closeBtn.addEventListener('click', closeEnvelope);
+
+      // Piano toggle handler
+      if (pianoToggle) {
+        pianoToggle.addEventListener('change', (e) => {
+          const enabled = !!e.target.checked;
+          // user gesture guaranteed by change event
+          setPianoEnabled(enabled, { userInitiated: true });
+        });
+      }
+
+      // If audio exists, set sensible defaults
+      if (audio) {
+        audio.loop = true;
+        audio.preload = 'metadata';
+        audio.volume = 0.7;
+      }
+
+      // Finish animation: when letter revealed, add a gentle end flourish
+      // (already handled in setEnvelopeOpen)
+
+      // Restore state
+      restorePianoPreference();
+
+      // Ensure close button is hidden initially
+      closeBtn.hidden = true;
+
+      // Small accessibility: announce when letter opens
+      const live = document.createElement('div');
+      live.setAttribute('aria-live', 'polite');
+      live.style.position = 'absolute';
+      live.style.left = '-9999px';
+      document.body.appendChild(live);
+
+      // Observe envelope open state to announce
+      const obs = new MutationObserver(() => {
+        const isOpen = envelope.classList.contains('open');
+        live.textContent = isOpen ? 'Letter opened' : 'Letter closed';
+      });
+      obs.observe(envelope, { attributes: true, attributeFilter: ['class'] });
+
+      // Clean up on unload (pause audio)
+      window.addEventListener('pagehide', () => {
+        if (audio) { audio.pause(); audio.currentTime = 0; }
+      }, { passive: true });
+
+      // Small UX: if user taps the envelope area while it's opening, ignore repeated clicks
+      let animating = false;
+      envelope.addEventListener('click', (e) => {
+        if (animating) e.stopImmediatePropagation();
+      }, true);
+
+      // Prevent accidental double-activation on mobile
+      openBtn.addEventListener('pointerdown', () => { animating = true; setTimeout(() => animating = false, 900); });
+
+      // Ensure focus styles for keyboard users
+      openBtn.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          openEnvelope(ev);
+        }
+      });
+
+    })();
+  </script>
+
+  <script src="js/app.js" defer></script>
+
+  <!-- Noscript fallback -->
+  <noscript>
+    <div class="container">
+      <div class="card my-md">
+        <h3 class="handwritten">A Letter for Meet</h3>
+        <p class="small">JavaScript is disabled. To open the envelope and hear the soft piano, enable JavaScript. The message is still visible below.</p>
+        <div class="card-body">
+          <p>Dear Meet,</p>
+          <p>There are days when the world feels heavy and the future looks like a long, echoing hallway. I wish I could sit beside you in every one of those moments — to hold your hand, to make you tea, to remind you of the small steady things that keep you going.</p>
+          <p>Whenever life becomes too loud, I hope this little place reminds you how deeply loved you are.</p>
+          <p>Love, Swarali ❤️</p>
+        </div>
+      </div>
+    </div>
+  </noscript>
+
+  <script>
+/* Compute header height and set CSS variable so main offset matches other pages.
+   This keeps the Letter page header spacing identical to the rest of the site. */
+(function () {
+  const root = document.documentElement;
+  const header = document.querySelector('.site-header');
+  const mainContainers = document.querySelectorAll('main.container');
+
+  function applyHeaderHeight() {
+    if (!header) return;
+    const rect = header.getBoundingClientRect();
+    const height = Math.max(56, Math.round(rect.height)); // sensible minimum
+    root.style.setProperty('--site-header-height', height + 'px');
+
+    // Apply consistent padding-top to main containers (half the header height, matching site rhythm)
+    mainContainers.forEach(m => {
+      // Use computed CSS variable so other pages behave the same
+      m.style.paddingTop = 'calc(var(--site-header-height) * 0.5)';
+    });
+
+    // Remove any accidental top margin on the first section that could push header visually
+    mainContainers.forEach(m => {
+      const firstSection = m.querySelector('.section, .stack');
+      if (firstSection) {
+        firstSection.style.marginTop = '0';
+      }
+    });
+  }
+
+  // Run on load and resize
+  window.addEventListener('load', applyHeaderHeight);
+  window.addEventListener('resize', applyHeaderHeight);
+
+  // Observe header size changes (handles dynamic nav changes, mobile toggles, PJAX)
+  if (window.ResizeObserver && header) {
+    try {
+      const ro = new ResizeObserver(applyHeaderHeight);
+      ro.observe(header);
+    } catch (e) {
+      // ignore if ResizeObserver not available
+    }
+  }
+})();
+</script>
+
+
+  
+  <!-- Audio (single instance, stays in DOM) -->
+<audio id="ambient-audio" loop preload="metadata" aria-hidden="true">
+  <source src="assets/audio/my-piano.mp3" type="audio/mpeg">
+</audio>
+
+<script src="js/navbar.js" defer></script>
+<script src="js/cursor.js" defer></script>
+<script src="js/pjax.js" defer></script>
+<script src="js/music.js" defer></script>
+<script src="js/app.js" defer></script>
+
+</body>
+</html>

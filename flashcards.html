@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Flashcards — Meet's Safe Place</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Design tokens and global styles (load in this order) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="page-fade">
+
+  <!-- Header / Navigation -->
+  <header class="site-header nav-visible" role="banner">
+    <nav class="navbar" role="navigation" aria-label="Primary">
+      <div class="nav-inner container" role="group" aria-label="Main navigation">
+        <a class="nav-logo" href="index.html">
+          <span class="brand-name">Meet's Safe Place</span>
+          <span class="brand-handwritten" aria-hidden="true">♡</span>
+        </a>
+
+        <ul id="nav-menu" class="nav-links" role="menubar" aria-label="Primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html" aria-current="page">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+          <span class="sr-only">Open menu</span>
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="nav-overlay" aria-hidden="true" id="nav-overlay">
+      <div class="container">
+        <ul class="nav-links" role="menu" aria-label="Mobile primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html" aria-current="page">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Decorative layers (presentational only) -->
+  <div class="decor-layer" aria-hidden="true">
+    <span class="petal float petal-1" role="presentation"></span>
+    <span class="petal float-slow petal-2" role="presentation"></span>
+    <span class="star star-1" role="presentation"></span>
+    <div class="rain" role="presentation"></div>
+  </div>
+
+  <!-- Main -->
+  <main id="main" class="container" role="main">
+    <section class="section" aria-labelledby="flashcards-title">
+      <div class="stack center">
+        <h1 id="flashcards-title" class="title">Encouragement Flashcards</h1>
+        <p class="handwritten small">Tap or press Enter to flip. When you need a gentle reminder, let one card find you.</p>
+
+        <!-- Centered flashcard area -->
+        <div class="flashcard-stage center" aria-live="polite" aria-atomic="true">
+          <!-- Flip 3D container -->
+          <div id="flashcard" class="flip-3d card glass-card" role="group" aria-label="Supportive flashcard" tabindex="0">
+            <div class="flip-3d__inner" id="flashcard-inner">
+              <div class="flip-3d__face flip-3d__front" id="flashcard-front" aria-hidden="false">
+                <div class="card-body">
+                  <div class="handwritten" id="front-text">Tap to reveal</div>
+                </div>
+              </div>
+
+              <div class="flip-3d__face flip-3d__back" id="flashcard-back" aria-hidden="true">
+                <div class="card-body">
+                  <div class="handwritten" id="back-text">You are enough.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress and controls -->
+          <div class="card-footer" style="margin-top:var(--space-md); width:100%; max-width:420px; justify-content:space-between;">
+            <div class="progress" aria-hidden="true" style="flex:1; margin-right:12px;">
+              <div class="small" id="progress-label" aria-live="polite">Card 1 of 8</div>
+              <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0" style="height:8px; border-radius:999px; background:rgba(0,0,0,0.06); margin-top:6px;">
+                <div id="progress-fill" style="height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg,var(--color-blush),var(--color-lavender)); transition:width 420ms var(--ease-soft);"></div>
+              </div>
+            </div>
+
+            <div class="controls" style="display:flex; gap:8px;">
+              <button id="prev-btn" class="btn btn-outline" aria-label="Previous card">Prev</button>
+              <button id="next-btn" class="btn btn-primary" aria-label="Next card">Next</button>
+            </div>
+          </div>
+
+          <!-- Small helper text -->
+          <p class="small" id="hint" style="margin-top:var(--space-sm);">Use ← → to navigate, Enter to flip.</p>
+        </div>
+
+        <!-- Navigation between pages -->
+        <div class="row" style="width:100%; margin-top:var(--space-lg); align-items:center; justify-content:space-between;">
+          <a class="btn btn-outline" href="little-things.html" role="button" aria-label="Previous page: Memory Box">← Previous</a>
+          <a class="btn btn-primary" href="calm.html" role="button" aria-label="Next page: Music">Next →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="row" style="align-items:center;justify-content:space-between;">
+        <div class="col small">© <span aria-hidden="true">♡</span> Swarali — Made for Meet</div>
+      
+      </div>
+    </div>
+  </footer>
+
+  <!-- Data and scripts -->
+  <!-- flashcards.json should be at /data/flashcards.json as an array of messages:
+       Example:
+       [
+         "You are enough. No company decides your worth.",
+         "Your hard work will open doors. Keep believing.",
+         ...
+       ]
+  -->
+
+  <!-- Page script: loads messages, handles flip, navigation, keyboard accessibility -->
+  <script type="module" src="js/flashcards-page.js" defer></script>
+
+  <!-- Noscript fallback -->
+  <noscript>
+    <div class="container">
+      <div class="card my-md">
+        <h3 class="handwritten">Flashcards</h3>
+        <p class="small">JavaScript is disabled. The interactive flashcards require JavaScript to function. You can still read a supportive message: "You are enough."</p>
+      </div>
+    </div>
+  </noscript>
+
+ 
+  <!-- Audio (single instance, stays in DOM) -->
+<audio id="ambient-audio" loop preload="metadata" aria-hidden="true">
+  <source src="assets/audio/my-piano.mp3" type="audio/mpeg">
+</audio>
+
+
+<!-- SCRIPT: ensure this matches the filename below -->
+<script type="module" src="js/flashcards.js" defer></script>
+
+<script src="js/navbar.js" defer></script>
+<script src="js/cursor.js" defer></script>
+<script src="js/pjax.js" defer></script>
+<script src="js/music.js" defer></script>
+<script src="js/app.js" defer></script>
+
+
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Our Story — Meet's Safe Place</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Design tokens and global styles (load in this order) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="page-fade">
+
+  <!-- Header / Navigation -->
+  <header class="site-header nav-visible" role="banner">
+    <nav class="navbar" role="navigation" aria-label="Primary">
+      <div class="nav-inner container" role="group" aria-label="Main navigation">
+        <a class="nav-logo" href="index.html">
+          <span class="brand-name">Meet's Safe Place</span>
+          <span class="brand-handwritten" aria-hidden="true">♡</span>
+        </a>
+
+        <ul id="nav-menu" class="nav-links" role="menubar" aria-label="Primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html" aria-current="page">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+          <span class="sr-only">Open menu</span>
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="nav-overlay" aria-hidden="true" id="nav-overlay">
+      <div class="container">
+        <ul class="nav-links" role="menu" aria-label="Mobile primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html" aria-current="page">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Decorative floating doodles (presentational) -->
+  <div class="decor-layer" aria-hidden="true">
+    <svg class="star star-1" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2l1.9 4.6L18.8 8l-3.9 2.8L15 15l-3-2-3 2 .1-4.2L5.2 8l4.9-1.4L12 2z" fill="rgba(231,216,255,0.9)"/>
+    </svg>
+    <svg class="doodle leaf-drift" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M2 12c6-6 14-6 20 0-6 6-14 6-20 0z" fill="rgba(220,239,216,0.9)"/>
+    </svg>
+    <span class="petal petal-1 float" aria-hidden="true"></span>
+    <span class="petal petal-2 float-slow" aria-hidden="true"></span>
+    <div class="rain" aria-hidden="true"></div>
+  </div>
+
+  <!-- Main content -->
+  <main id="main" class="container" role="main">
+    <section class="section" aria-labelledby="story-title">
+      <div class="stack center" style="max-width:980px;">
+        <h1 id="story-title" class="title">Our Story</h1>
+        <p class="handwritten small">A gentle timeline of little moments — written like a diary.</p>
+
+        <!-- Timeline wrapper -->
+        <div class="timeline-wrapper" style="width:100%; margin-top:var(--space-lg);">
+         <div id="timeline" class="timeline responsive-grid" role="list" aria-live="polite" aria-label="Story timeline">
+
+            <!-- Timeline items are injected here by js/story.js from data/timeline.json -->
+            <!-- Fallback content for no-JS or fetch failure -->
+            <li class="timeline-item card" id="timeline-fallback">
+              <div class="timeline-content">
+                <h3 class="handwritten">A Same college</h3>
+                <p class="small">Even when we were in the same college, we never met. When I look back at it now, it feels like our story had already started long before we even knew each other.</p>
+                <div class="small text-muted"> It's Gods plan </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Navigation between pages -->
+        <div class="row" style="width:100%; margin-top:var(--space-lg); align-items:center; justify-content:space-between;">
+          <a class="btn btn-outline" href="index.html" role="button" aria-label="Previous page: Home">← Previous</a>
+          <a class="btn btn-primary" href="little-things.html" role="button" aria-label="Next page: Little Things">Next →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="row" style="align-items:center;justify-content:space-between;">
+        <div class="col small">© <span aria-hidden="true">♡</span> Swarali — Made for Meet</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Timeline data (external JSON) lives at /data/timeline.json
+       Structure (no dates):
+       [
+         {
+           "title": "HOD gave me your number",
+           "note": "Our Head of Department shared Meet’s phone number so I could ask him about further studies.",
+           "handwritten": "The very first link.",
+           "doodle": "📱"
+         },
+         ...
+       ]
+  -->
+
+  <!-- Scripts -->
+  <script src="js/navbar.js" defer></script>
+  <script src="js/cursor.js" defer></script>
+  <script src="js/story.js" defer></script>
+
+  <noscript>
+    <style>
+      #timeline { display:block; }
+      #timeline-fallback { display:block; }
+    </style>
+    <div class="container">
+      <div class="card my-md">
+        <h3 class="handwritten">Our Story</h3>
+        <p class="small">It looks like JavaScript is disabled. To see the full timeline, enable JavaScript or open the file locally.</p>
+      </div>
+    </div>
+  </noscript>
+
+  <!-- Audio -->
+  <audio id="ambient-audio" loop preload="metadata" aria-hidden="true">
+    <source src="assets/audio/my-piano.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Script order -->
+  <script src="js/navbar.js" defer></script>
+  <script src="js/cursor.js" defer></script>
+  <script src="js/pjax.js" defer></script>
+  <script src="js/music.js" defer></script>
+  <script src="js/app.js" defer></script>
+
+</body>
+</html>
+``

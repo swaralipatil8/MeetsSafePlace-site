@@ -1,0 +1,330 @@
+/* ==========================================================================
+   Meet's Safe Place — navbar.css
+   Purpose: Premium, accessible, responsive navigation bar with glassmorphism,
+            sticky behavior, mobile hamburger, hide-on-scroll, and subtle
+            animations. Designed to be imported after variables.css and
+            style.css (global utilities).
+   Author: Senior Frontend Engineer & UI/UX Designer
+   ========================================================================== */
+
+/* ==========================================================================
+   0. Notes
+   - This file contains only navbar-specific styles and utility hooks used by
+     the navbar JavaScript (e.g., .nav-hidden, .is-open). Keep JS toggles in
+     sync with these class names.
+   - Expected HTML structure (semantic):
+     <header class="site-header">
+       <nav class="navbar" role="navigation" aria-label="Primary">
+         <div class="nav-inner container">
+           <a class="nav-logo" href="index.html">Meet's Safe Place</a>
+           <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+             <span class="sr-only">Open menu</span>
+             <span class="hamburger" aria-hidden="true"></span>
+           </button>
+           <ul id="nav-menu" class="nav-links"> ... </ul>
+         </div>
+       </nav>
+     </header>
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Base navbar layout
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 16px; /* slight offset for floating feel */
+  z-index: var(--z-overlay, 50);
+  display: block;
+  width: calc(100% - 32px);
+  margin: 0 auto;
+  padding: 0 var(--space-md, 20px);
+  pointer-events: auto;
+}
+
+/* The main nav container uses glassmorphism and rounded corners */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-surface, rgba(255,255,255,0.55));
+  backdrop-filter: var(--glass-backdrop, blur(12px));
+  -webkit-backdrop-filter: var(--glass-backdrop, blur(12px));
+  border-radius: var(--radius-lg, 24px);
+  box-shadow: var(--shadow-1, 0 6px 18px rgba(0,0,0,0.06));
+  border: var(--glass-border, 1px solid rgba(255,255,255,0.35));
+  transition: transform 360ms var(--ease-soft, cubic-bezier(0.25,0.46,0.45,0.94)), 
+              opacity 360ms var(--ease-soft), 
+              backdrop-filter 360ms var(--ease-soft);
+  padding: calc(var(--space-xs,8px)) calc(var(--space-sm,12px));
+  margin: 8px auto;
+  max-width: var(--container-width, 1100px);
+  will-change: transform, opacity;
+}
+
+/* Inner wrapper aligns content and constrains width */
+.nav-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md, 20px);
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   2. Logo
+   - subtle handwritten accent for the brand name
+   ========================================================================== */
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-heading, "Playfair Display"), serif;
+  font-size: 1.05rem;
+  color: var(--color-text, #4B4B4B);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: color 260ms var(--ease-soft), transform 260ms var(--ease-soft);
+}
+.nav-logo .brand-handwritten {
+  font-family: var(--font-handwritten, "Dancing Script"), cursive;
+  font-size: 1.15rem;
+  color: var(--accent-warm, #FF9FB3);
+  margin-left: 6px;
+}
+
+/* Logo hover/focus */
+.nav-logo:hover,
+.nav-logo:focus {
+  color: var(--accent-cool, #BFA8FF);
+  transform: translateY(-2px);
+}
+.nav-logo:focus-visible {
+  box-shadow: 0 0 0 var(--focus-width, 4px) var(--focus-color, rgba(106,27,154,0.12));
+}
+
+/* ==========================================================================
+   3. Desktop links
+   - horizontal list with subtle active underline animation
+   ========================================================================== */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: calc(var(--space-md, 20px) * 0.8);
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Individual link */
+.nav-links a {
+  display: inline-block;
+  padding: 8px 10px;
+  color: var(--color-text, #4B4B4B);
+  font-family: var(--font-body, "Poppins");
+  font-weight: 500;
+  font-size: 0.98rem;
+  border-radius: 8px;
+  position: relative;
+  transition: color 260ms var(--ease-soft), transform 260ms var(--ease-soft), opacity 260ms var(--ease-soft);
+}
+
+/* Hover: gentle lift and color shift */
+.nav-links a:hover,
+.nav-links a:focus {
+  color: var(--accent-cool, #BFA8FF);
+  transform: translateY(-3px);
+  opacity: 0.98;
+}
+
+/* Active link underline animation (soft gradient) */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -6px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,156,179,0.9), rgba(191,168,255,0.9));
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 360ms var(--ease-soft), opacity 360ms var(--ease-soft);
+  opacity: 0;
+}
+.nav-links a[aria-current="page"]::after,
+.nav-links a.active::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* Focus-visible for keyboard users */
+.nav-links a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-width, 4px) var(--focus-color, rgba(106,27,154,0.12));
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   4. Mobile: hamburger, overlay menu, and transitions
+   ========================================================================== */
+.nav-toggle {
+  display: none; /* shown on small screens */
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background 220ms var(--ease-soft), transform 220ms var(--ease-soft);
+}
+.nav-toggle:focus-visible {
+  box-shadow: 0 0 0 var(--focus-width, 4px) var(--focus-color, rgba(106,27,154,0.12));
+}
+
+/* Hamburger icon (pure CSS) */
+.hamburger {
+  width: 22px;
+  height: 2px;
+  background: var(--color-text, #4B4B4B);
+  display: inline-block;
+  position: relative;
+  border-radius: 2px;
+  transition: background 220ms var(--ease-soft), transform 220ms var(--ease-soft);
+}
+.hamburger::before,
+.hamburger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 2px;
+  background: inherit;
+  border-radius: 2px;
+  transition: transform 260ms var(--ease-soft), top 260ms var(--ease-soft), opacity 260ms var(--ease-soft);
+}
+.hamburger::before { top: -7px; }
+.hamburger::after  { top: 7px; }
+
+/* When menu is open (JS toggles .is-open on .nav-toggle or .navbar) */
+.nav-toggle.is-open .hamburger {
+  background: transparent;
+}
+.nav-toggle.is-open .hamburger::before {
+  transform: rotate(45deg);
+  top: 0;
+}
+.nav-toggle.is-open .hamburger::after {
+  transform: rotate(-45deg);
+  top: 0;
+}
+
+/* Mobile menu overlay (hidden by default) */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.55));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: calc(var(--z-modal,100) - 1);
+  padding: var(--space-lg, 32px);
+  overflow-y: auto;
+}
+
+/* Mobile nav list inside overlay */
+.nav-overlay .nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md, 20px);
+  align-items: flex-start;
+  margin-top: var(--space-lg, 32px);
+}
+
+/* Show overlay when open (JS toggles .is-open on .nav-overlay) */
+.nav-overlay.is-open {
+  display: block;
+  animation: overlayIn var(--anim-medium, 420ms) var(--ease-soft) both;
+}
+@keyframes overlayIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   5. Hide on scroll down / appear on scroll up
+   - JS should toggle .nav-hidden on .site-header when scrolling down
+   ========================================================================== */
+.site-header.nav-hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+  pointer-events: none;
+}
+.site-header.nav-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Smooth transition for header show/hide */
+.site-header {
+  transition: transform 420ms var(--ease-soft), opacity 420ms var(--ease-soft);
+}
+
+/* ==========================================================================
+   6. Responsive breakpoints
+   ========================================================================== */
+@media (max-width: 900px) {
+  .nav-links { display: none; } /* hide desktop links */
+  .nav-toggle { display: inline-flex; } /* show hamburger */
+  .nav-logo { font-size: 1rem; }
+  .navbar { padding: 8px 12px; }
+}
+
+/* Small screens: compact layout */
+@media (max-width: 480px) {
+  .nav-inner { gap: var(--space-sm, 12px); }
+  .nav-logo { font-size: 0.95rem; padding: 6px 8px; }
+  .hamburger { width: 20px; }
+}
+
+/* ==========================================================================
+   7. Accessibility & reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .site-header,
+  .nav-overlay,
+  .nav-links a,
+  .nav-toggle,
+  .hamburger {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   8. Utility helpers for JS hooks (kept minimal)
+   ========================================================================== */
+/* When mobile menu is open, prevent body scroll (JS should toggle) */
+.body-menu-open {
+  overflow: hidden;
+}
+
+/* Small helper to visually indicate active link (if JS toggles .active) */
+.nav-links a.active {
+  color: var(--accent-warm, #FF9FB3);
+}
+
+/* ==========================================================================
+   9. Developer notes
+   - Use the following JS responsibilities:
+     • Toggle .nav-hidden / .nav-visible on .site-header based on scroll direction.
+     • Toggle .is-open on .nav-toggle and .nav-overlay when hamburger is clicked.
+     • Add aria-expanded="true|false" to .nav-toggle to reflect state.
+     • Add .body-menu-open to <body> when overlay is open to prevent background scroll.
+     • Add .active or set aria-current="page" on the current link for the underline animation.
+   - Keep component-specific styling (spacing, link colors, icon sizes) in components.css
+     if you need to override for a particular layout.
+   ========================================================================== */

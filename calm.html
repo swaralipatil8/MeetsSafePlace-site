@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calm Corner — Meet's Safe Place</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Core styles (load variables first) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Page-specific styles -->
+  <link rel="stylesheet" href="css/calm.css">
+</head>
+<body class="page-fade">
+
+  <!-- Header / Navigation -->
+  <header class="site-header nav-visible" role="banner">
+    <nav class="navbar" role="navigation" aria-label="Primary">
+      <div class="nav-inner container" role="group" aria-label="Main navigation">
+        <a class="nav-logo" href="index.html">
+          <span class="brand-name">Meet's Safe Place</span>
+          <span class="brand-handwritten" aria-hidden="true">♡</span>
+        </a>
+
+        <ul id="nav-menu" class="nav-links" role="menubar" aria-label="Primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html" aria-current="page">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+          <span class="sr-only">Open menu</span>
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="nav-overlay" aria-hidden="true" id="nav-overlay">
+      <div class="container">
+        <ul class="nav-links" role="menu" aria-label="Mobile primary links">
+          <li role="none"><a role="menuitem" href="index.html">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html" aria-current="page">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Decorative floating leaves and soft gradient background (presentational) -->
+  <div class="decor-layer" aria-hidden="true">
+    <span class="leaf leaf-1 leaf-drift" role="presentation"></span>
+    <span class="leaf leaf-2 float-slow" role="presentation"></span>
+    <span class="leaf leaf-3 float" role="presentation"></span>
+    <div class="rain" role="presentation"></div>
+  </div>
+
+  <!-- Main content -->
+  <main id="main" class="container" role="main">
+    <section class="section" aria-labelledby="calm-title">
+      <div class="stack center" style="max-width:920px;">
+        <h1 id="calm-title" class="title">Calm Corner</h1>
+        <p class="handwritten small">A quiet exercise to breathe with me. Soft light, slow breaths, and a gentle quote.</p>
+
+        <!-- Breathing area -->
+        <div class="breath-area stack center" role="region" aria-labelledby="breath-heading" aria-live="polite">
+          <h2 id="breath-heading" class="lead">Breathing Exercise</h2>
+
+          <!-- Breathing circle (animated via CSS .breath) 
+          <div class="breath-wrapper" aria-hidden="false">
+            <div id="breathing-circle" class="breath glass-card" role="img" aria-label="Breathing circle. Breathe in and out with the animation."></div>
+          </div> 
+          -->
+
+          <!-- Instructions -->
+          <div class="card glass-card card--soft" role="note" aria-label="Breathing instructions">
+            <p class="small">
+              <strong>Inhale</strong>for 4 seconds, <strong>hold</strong> for 2 seconds, then <strong>exhale</strong> for 6 seconds.
+            </p>
+            <p class="small">Repeat for a few minutes. Let thoughts pass like clouds — return to the breath.</p>
+          </div>
+        </div>
+
+        <!-- Quote card -->
+        <article class="quote-card card glass-card card--elevated" role="article" aria-live="polite" aria-atomic="true">
+          <div class="quote-text" id="calm-quote">Loading a gentle thought…</div>
+          <div class="quote-author small text-muted" id="calm-quote-author"></div>
+
+          <div class="card-footer" style="margin-top:var(--space-md); justify-content:flex-end;">
+            <button id="new-quote" class="btn btn-primary" aria-label="Show a new calming quote">New Quote</button>
+          </div>
+        </article>
+
+    
+        <!-- Navigation -->
+        <div class="row" style="width:100%; margin-top:var(--space-lg); align-items:center; justify-content:space-between;">
+          <a class="btn btn-outline" href="flashcards.html" role="button" aria-label="Previous page: Flashcards">← Previous</a>
+          <a class="btn btn-primary" href="letter.html" role="button" aria-label="Next page: Letter">Next →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="row" style="align-items:center;justify-content:space-between;">
+        <div class="col small">© <span aria-hidden="true">♡</span> Swarali — Made for Meet</div>
+       
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/navbar.js" defer></script>
+  <script src="js/cursor.js" defer></script>
+  <script src="js/calm.js" defer></script>
+  <script src="js/app.js" defer></script>
+
+  <!-- Accessibility: noscript fallback -->
+  <noscript>
+    <div class="container">
+      <div class="card my-md">
+        <h3 class="handwritten">Calm Corner</h3>
+        <p class="small">JavaScript is disabled. The breathing animation and dynamic quotes require JavaScript. Try enabling scripts to use the full experience.</p>
+      </div>
+    </div>
+  </noscript>
+
+  <!-- Audio (single instance, stays in DOM) -->
+<audio id="ambient-audio" loop preload="metadata" aria-hidden="true">
+  <source src="assets/audio/my-piano.mp3" type="audio/mpeg">
+</audio>
+
+<script src="js/navbar.js" defer></script>
+<script src="js/cursor.js" defer></script>
+<script src="js/pjax.js" defer></script>
+<script src="js/music.js" defer></script>
+<script src="js/app.js" defer></script>
+
+
+</body>
+</html>
+
+
+

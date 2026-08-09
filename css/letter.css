@@ -1,0 +1,57 @@
+/* ---------------------------
+   Letter page: navbar normalization
+   (Paste at end of css/letter.css)
+   --------------------------- */
+
+/* Ensure header uses the same baseline as other pages */
+.site-header {
+  position: sticky;      /* keep sticky behavior */
+  top: 16px;             /* same floating offset used site-wide */
+  z-index: var(--z-overlay, 50);
+  width: calc(100% - 32px); /* same width rhythm as global navbar */
+  margin: 0 auto;
+  padding: 0 var(--space-md, 20px);
+  pointer-events: auto;
+  transition: transform 420ms var(--ease-soft), opacity 420ms var(--ease-soft);
+}
+
+/* Make the inner nav match the site's vertical rhythm */
+.site-header .nav-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md, 20px);
+  justify-content: space-between;
+  min-height: 56px; /* match other pages; change to 64/72 if your site uses that */
+}
+
+/* Ensure the navbar container uses the same max-width and margins */
+.navbar {
+  margin: 8px auto;
+  max-width: var(--container-width, 1100px);
+  padding: calc(var(--space-xs,8px)) calc(var(--space-sm,12px));
+}
+
+/* Prevent the first content block from pushing the header down */
+main.container > .section:first-of-type,
+main.container > .stack:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Fallback main offset (JS will set --site-header-height precisely) */
+main.container {
+  padding-top: calc(var(--site-header-height, 72px) * 0.5);
+}
+
+/* Reset any large top margin on the page title that could shift header */
+#letter-title,
+.title {
+  margin-top: 0;
+}
+
+/* Small responsive tweak */
+@media (max-width: 520px) {
+  .site-header .nav-inner { min-height: 56px; }
+  main.container { padding-top: calc(var(--site-header-height, 64px) * 0.35); }
+}

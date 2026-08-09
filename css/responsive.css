@@ -1,0 +1,349 @@
+/* ==========================================================================
+   Meet's Safe Place — responsive.css
+   Purpose: Responsive rules and adaptive utilities for Desktop, Laptop,
+            Tablet, and Mobile. Keeps the design elegant, readable and
+            consistent across viewports. Import after variables.css,
+            style.css, components.css, navbar.css, and animations.css.
+   ========================================================================== */
+
+/* ==========================================================================
+   0. Breakpoint aliases (ensure these match variables.css)
+   ========================================================================== */
+/* Fallbacks if variables not loaded */
+:root {
+  --bp-xs: 360px;
+  --bp-sm: 600px;
+  --bp-md: 900px;
+  --bp-lg: 1200px;
+  --bp-xl: 1440px;
+}
+
+/* ==========================================================================
+   1. Global typography scaling
+   - fluid type for headings and body to maintain rhythm across screens
+   ========================================================================== */
+html {
+  /* Use clamp to keep sizes comfortable on all screens */
+  font-size: clamp(15px, 1.2vw + 0.6rem, 18px);
+}
+
+/* Heading scale adjustments for smaller screens */
+@media (max-width: 900px) {
+  h1 { font-size: clamp(1.4rem, 4.2vw, 2.25rem); }
+  h2 { font-size: clamp(1.2rem, 3.2vw, 1.8rem); }
+  h3 { font-size: clamp(1.05rem, 2.2vw, 1.25rem); }
+}
+
+/* Tighten leading on small screens for compactness */
+@media (max-width: 600px) {
+  :where(h1,h2,h3) { line-height: 1.12; }
+  body { line-height: 1.5; }
+}
+
+/* ==========================================================================
+   2. Container & spacing adjustments
+   - reduce paddings and container widths progressively on smaller screens
+   ========================================================================== */
+.container {
+  max-width: var(--container-width, 1100px);
+  padding-left: var(--container-padding, var(--space-lg));
+  padding-right: var(--container-padding, var(--space-lg));
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .container {
+    max-width: var(--container-width-md, 720px);
+    padding-left: var(--container-padding-sm, var(--space-md));
+    padding-right: var(--container-padding-sm, var(--space-md));
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .container {
+    max-width: 100%;
+    padding-left: calc(var(--space-md) * 0.8);
+    padding-right: calc(var(--space-md) * 0.8);
+  }
+  .section { padding: calc(var(--space-md) * 1.1) calc(var(--space-md) * 0.9); }
+}
+
+/* ==========================================================================
+   3. Navigation responsiveness
+   - desktop: horizontal links
+   - tablet/mobile: hamburger overlay
+   - sticky behavior preserved
+   ========================================================================== */
+@media (min-width: 901px) {
+  /* Desktop: ensure nav links visible and spaced */
+  .nav-links { display: flex !important; align-items: center; gap: var(--space-md); }
+  .nav-toggle { display: none !important; }
+  .nav-overlay { display: none !important; }
+}
+
+/* Tablet */
+@media (max-width: 900px) and (min-width: 481px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .nav-logo { font-size: 1rem; }
+  .navbar { padding: 8px 14px; }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .nav-logo { font-size: 0.95rem; }
+  .navbar { padding: 6px 10px; }
+  .nav-overlay .nav-links { gap: calc(var(--space-sm)); }
+  .nav-overlay { padding: var(--space-md); }
+}
+
+/* Hide-on-scroll behavior: ensure header doesn't overlap content on small screens */
+@media (max-width: 600px) {
+  .site-header { top: 8px; }
+}
+
+/* ==========================================================================
+   4. Grid systems & cards
+   - responsive grid for cards, memory items, gallery, flashcards
+   ========================================================================== */
+/* Generic responsive grid helper (used by pages) */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .responsive-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Desktop / Laptop */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .responsive-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Tablet */
+@media (min-width: 600px) and (max-width: 899px) {
+  .responsive-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Mobile */
+@media (max-width: 599px) {
+  .responsive-grid { grid-template-columns: 1fr; gap: var(--space-sm); }
+}
+
+/* Card sizing: keep consistent padding and touch targets */
+.card, .glass-card, .memory-card, .timeline-card {
+  padding: var(--space-md);
+  border-radius: var(--card-radius);
+}
+
+/* Reduce padding on small screens for denser layouts */
+@media (max-width: 600px) {
+  .card, .glass-card, .memory-card, .timeline-card { padding: var(--space-sm); border-radius: 12px; }
+}
+
+/* ==========================================================================
+   5. Timeline responsiveness
+   - vertical stack on mobile, side-by-side on larger screens
+   ========================================================================== */
+.timeline {
+  position: relative;
+  padding-left: var(--space-lg);
+  border-left: 3px solid rgba(231,216,255,0.45);
+}
+
+/* Timeline items align left on large screens */
+@media (min-width: 900px) {
+  .timeline { padding-left: var(--space-lg); }
+  .timeline-item { margin-bottom: var(--space-lg); }
+}
+
+/* On small screens, simplify: remove left offset and use stacked cards */
+@media (max-width: 899px) {
+  .timeline {
+    padding-left: 0;
+    border-left: none;
+  }
+  .timeline-item {
+    margin-bottom: var(--space-md);
+  }
+  .timeline-item::before { display: none; }
+  .timeline-content { margin-left: 0; }
+}
+
+/* ==========================================================================
+   6. Memory Box layout
+   - grid of polaroids on desktop, single column on mobile
+   ========================================================================== */
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+  .memory-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Tablet */
+@media (min-width: 700px) and (max-width: 1199px) {
+  .memory-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Small tablet */
+@media (min-width: 480px) and (max-width: 699px) {
+  .memory-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Mobile */
+@media (max-width: 479px) {
+  .memory-grid { grid-template-columns: 1fr; gap: var(--space-sm); }
+  .polaroid { transform: none !important; } /* remove tilt for small screens */
+}
+
+/* ==========================================================================
+   7. Flashcards responsiveness
+   - center stack on mobile, grid on larger screens
+   ========================================================================== */
+.flashcard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: var(--space-md);
+  justify-items: center;
+}
+
+/* Desktop */
+@media (min-width: 900px) {
+  .flashcard-grid { grid-template-columns: repeat(3, minmax(220px, 1fr)); }
+}
+
+/* Tablet */
+@media (min-width: 600px) and (max-width: 899px) {
+  .flashcard-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+}
+
+/* Mobile */
+@media (max-width: 599px) {
+  .flashcard-grid { grid-template-columns: 1fr; gap: var(--space-sm); }
+  .flashcard { max-width: 100%; height: auto; }
+}
+
+/* ==========================================================================
+   8. Music Room responsiveness
+   - layout for controls, playlist, and visualizers
+   ========================================================================== */
+.music-room {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .music-room { grid-template-columns: 1fr; gap: var(--space-md); }
+  .music-visual { order: 2; }
+  .music-controls { order: 1; }
+}
+
+/* Mobile: enlarge controls for touch */
+@media (max-width: 480px) {
+  .music-controls button { width: 56px; height: 56px; }
+  .music-control input[type="range"] { width: 100%; }
+}
+
+/* ==========================================================================
+   9. Section title & hero adjustments
+   - keep hero readable and balanced on small screens
+   ========================================================================== */
+.hero {
+  padding: var(--space-xxl, 72px) 0;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .hero { padding: var(--space-lg) 0; }
+  .hero .title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+  .hero .subtitle { font-size: 1rem; }
+}
+
+/* Section titles: keep decorative bar visible but compact */
+.section-title .decor { width: 48px; height: 5px; }
+
+/* ==========================================================================
+   10. Touch targets & accessibility
+   - ensure interactive elements meet minimum touch size on mobile
+   ========================================================================== */
+@media (max-width: 600px) {
+  .btn, .nav-toggle, .music-control button, .modal__close {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 14px;
+  }
+  .nav-links a { padding: 10px 12px; display: block; }
+}
+
+/* ==========================================================================
+   11. Spacing utilities adjustments for small screens
+   - reduce large margins to keep content visible
+   ========================================================================== */
+@media (max-width: 600px) {
+  .m-lg { margin: var(--space-md) !important; }
+  .my-lg { margin-top: var(--space-md) !important; margin-bottom: var(--space-md) !important; }
+  .p-lg { padding: var(--space-md) !important; }
+}
+
+/* ==========================================================================
+   12. Paper texture & decorative layers
+   - ensure overlays scale and remain subtle on small screens
+   ========================================================================== */
+.paper-overlay {
+  background-size: cover;
+  opacity: var(--paper-texture-opacity, 0.04);
+}
+@media (max-width: 600px) {
+  .paper-overlay { opacity: calc(var(--paper-texture-opacity, 0.04) * 0.8); background-position: center; }
+}
+
+/* ==========================================================================
+   13. Timeline & memory accessibility tweaks
+   - increase contrast and spacing for readability on small screens
+   ========================================================================== */
+@media (max-width: 480px) {
+  .timeline-card .meta { min-width: 48px; font-size: 0.85rem; }
+  .memory-card .memory-caption { font-size: 1rem; padding: var(--space-sm); }
+}
+
+/* ==========================================================================
+   14. Reduced motion & performance on low-power devices
+   - disable heavy decorative animations on small screens or low-power
+   ========================================================================== */
+@media (max-width: 480px), (prefers-reduced-motion: reduce) {
+  .float, .petal, .star, .leaf-drift, .rain { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .cursor-glow::before { display: none; }
+}
+
+/* ==========================================================================
+   15. Utility: responsive helpers for layout switching
+   - .stack-on-mobile: row -> column on small screens
+   ========================================================================== */
+.stack-on-mobile {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+@media (max-width: 700px) {
+  .stack-on-mobile { flex-direction: column; gap: var(--space-sm); }
+}
+
+/* ==========================================================================
+   16. Developer notes
+   - Keep responsive.css focused on layout and adaptive rules only.
+   - Avoid component-specific visual overrides here; use components.css for
+     visual variants. Page-level modules may override layout rules when needed.
+   ========================================================================== */

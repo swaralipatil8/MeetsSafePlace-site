@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meet's Safe Place — Home</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Design tokens and global styles (load in this order) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="page-fade">
+
+  <!-- Header / Navigation (semantic, accessible) -->
+  <header class="site-header nav-visible" role="banner">
+    <nav class="navbar" role="navigation" aria-label="Primary">
+      <div class="nav-inner container" role="group" aria-label="Main navigation">
+        <a class="nav-logo" href="index.html">
+          <span class="brand-name">Meet's Safe Place</span>
+          <span class="brand-handwritten" aria-hidden="true">♡</span>
+        </a>
+
+        <!-- Desktop links -->
+        <ul id="nav-menu" class="nav-links" role="menubar" aria-label="Primary links">
+          <li role="none"><a role="menuitem" href="index.html" aria-current="page">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+        
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+
+
+        <!-- Mobile hamburger -->
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+          <span class="sr-only">Open menu</span>
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile overlay (toggled by JS) -->
+    <div class="nav-overlay" aria-hidden="true" id="nav-overlay">
+      <div class="container">
+        <ul class="nav-links" role="menu" aria-label="Mobile primary links">
+          <li role="none"><a role="menuitem" href="index.html" aria-current="page">Home</a></li>
+          <li role="none"><a role="menuitem" href="story.html">Story</a></li>
+          <li role="none"><a role="menuitem" href="little-things.html">Little Things</a></li>
+          <li role="none"><a role="menuitem" href="flashcards.html">Flashcards</a></li>
+          <li role="none"><a role="menuitem" href="calm.html">Calm</a></li>
+          <li role="none"><a role="menuitem" href="letter.html">Letter</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Decorative layers (purely presentational) -->
+  <div class="decor-layer" aria-hidden="true">
+    <!-- Floating petals (multiple elements for depth) -->
+    <span class="petal float petal-1" role="presentation"></span>
+    <span class="petal float-slow petal-2" role="presentation"></span>
+    <span class="petal leaf-drift petal-3" role="presentation"></span>
+
+    <!-- Soft glowing stars -->
+    <span class="star star-1" role="presentation"></span>
+    <span class="star star-2" role="presentation"></span>
+
+    <!-- Rain overlay (subtle) -->
+    <div class="rain" role="presentation"></div>
+  </div>
+
+  <!-- Main content -->
+  <main id="main" class="container" role="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="stack center" style="max-width:900px;">
+        <h1 id="hero-title" class="title handwritten">Meet’s Safe Place</h1>
+
+        <!-- Small handwritten subtitle -->
+        <p class="handwritten small">A quiet corner made with love — breathe, rest, and remember.</p>
+
+        <!-- Glass welcome card -->
+        <article class="card glass-card card--elevated surface-hover" aria-labelledby="welcome-heading">
+          <header class="card-header">
+            <h2 id="welcome-heading" class="lead">Welcome, Meet</h2>
+          </header>
+
+          <div class="card-body">
+            <p>
+              Hi Meet — this little place is for the heavy days, the quiet nights, and the moments when you need
+              a gentle reminder that you are not alone. Created by Swarali with all the warmth and patience in the world.
+            </p>
+
+            <blockquote class="quote-card" aria-label="Comforting quote">
+              <p class="quote-text">"No matter how heavy today feels, you'll never carry it alone."</p>
+              <div class="quote-author small">— With love, Swarali</div>
+            </blockquote>
+          </div>
+
+          <footer class="card-footer">
+            <a class="btn btn-primary ripple-container" href="story.html" role="button">Begin Our Journey</a>
+
+            <!-- Music toggle (accessible) -->
+            <div class="music-control" role="region" aria-label="Ambient music controls">
+              <label class="toggle" for="music-toggle">
+                <input id="music-toggle" class="toggle__input" type="checkbox" aria-checked="false" />
+                <span class="toggle__track" aria-hidden="true">
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                </span>
+                <span class="small">Calming Piano</span>
+              </label>
+            </div>
+          </footer>
+        </article>
+
+        <!-- Soft supportive line -->
+        <p class="small text-muted">Open this page whenever you need a pause. No rush. No pressure.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="row" style="align-items:center;justify-content:space-between;">
+        <div class="col small">
+          © <span aria-hidden="true">♡</span> Swarali — Made for Meet
+        </div>
+        
+      </div>
+    </div>
+  </footer>
+
+
+    </footer>
+
+  <!-- Audio (single instance, stays in DOM) -->
+  <audio id="ambient-audio" loop preload="metadata" aria-hidden="true">
+    <source src="assets/audio/my-piano.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Scripts (modular, reusable) -->
+  <script src="js/navbar.js" defer></script>
+  <script src="js/cursor.js" defer></script>
+    <script src="js/pjax.js" defer></script>
+  <script src="js/music.js" defer></script>
+  <script src="js/app.js" defer></script>
+
+  
+</body>
+</html>
+
+ 

@@ -1,0 +1,602 @@
+/* ==========================================================================
+   Meet's Safe Place — components.css
+   Purpose: Reusable UI components for a premium, diary-like frontend.
+   Notes:
+   - Import after variables.css and style.css (global utilities).
+   - This file contains component-level styles only (no page-specific rules).
+   - Keep components semantic, accessible, and responsive.
+   ========================================================================== */
+
+/* ==========================================================================
+   0. Component design tokens (local fallbacks)
+   ========================================================================== */
+:root {
+  --btn-padding-y: 10px;
+  --btn-padding-x: 18px;
+  --btn-radius: var(--radius-pill, 9999px);
+  --card-radius: var(--radius-md, 16px);
+  --note-radius: 12px;
+  --control-size: 44px;
+  --tooltip-gap: 8px;
+  --modal-max-width: 720px;
+}
+
+/* ==========================================================================
+   1. Buttons (base + variants)
+   - .btn (base)
+   - .btn-primary
+   - .btn-outline
+   - .btn-ghost (minimal)
+   - size modifiers: .btn-sm, .btn-lg
+   - state: :disabled, :focus-visible
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border-radius: var(--btn-radius);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1;
+  transition: transform var(--anim-fast, 180ms) var(--ease-soft), box-shadow var(--anim-fast), background-color var(--anim-fast);
+  will-change: transform, box-shadow;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary: soft pastel filled */
+.btn-primary {
+  background: linear-gradient(180deg, var(--color-blush, #FFDCE8), var(--color-soft-cream, #FDF6F0));
+  color: var(--color-text);
+  box-shadow: 0 6px 18px rgba(191, 104, 150, 0.08);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2, 0 10px 30px rgba(0,0,0,0.09));
+}
+.btn-primary:active { transform: translateY(-1px); }
+
+/* Outline: glass border with subtle hover */
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(75,75,75,0.06);
+  color: var(--color-text);
+  box-shadow: none;
+}
+.btn-outline:hover,
+.btn-outline:focus {
+  background: rgba(255,255,255,0.6);
+  transform: translateY(-2px);
+}
+
+/* Ghost: minimal, for subtle actions */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-muted, #7A7A7A);
+  opacity: 0.95;
+}
+.btn-ghost:hover { color: var(--color-text); transform: translateY(-2px); }
+
+/* Sizes */
+.btn-sm { padding: 6px 12px; font-size: 0.9rem; }
+.btn-lg { padding: 14px 22px; font-size: 1.05rem; }
+
+/* Disabled */
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Focus visible */
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-width, 4px) var(--focus-color, rgba(106,27,154,0.12));
+  border-radius: 12px;
+}
+
+/* ==========================================================================
+   2. Cards (generic)
+   - .card (base)
+   - .card--elevated, .card--soft
+   - content helpers: .card-header, .card-body, .card-footer
+   ========================================================================== */
+.card {
+  background: var(--glass-surface, rgba(255,255,255,0.55));
+  border-radius: var(--card-radius);
+  padding: var(--space-md, 20px);
+  box-shadow: var(--shadow-1, 0 6px 18px rgba(0,0,0,0.06));
+  border: var(--glass-border, 1px solid rgba(255,255,255,0.35));
+  backdrop-filter: var(--glass-backdrop, blur(12px));
+  transition: transform var(--anim-medium) var(--ease-soft), box-shadow var(--anim-medium) var(--ease-soft);
+  will-change: transform, box-shadow;
+}
+
+/* Elevated variant */
+.card--elevated {
+  box-shadow: var(--shadow-2, 0 10px 30px rgba(0,0,0,0.09));
+}
+.card--soft {
+  background: rgba(255,255,255,0.7);
+  box-shadow: var(--shadow-1);
+}
+
+/* Card content structure */
+.card-header { margin-bottom: var(--space-sm, 12px); }
+.card-body { margin-bottom: var(--space-sm, 12px); }
+.card-footer { display: flex; gap: var(--space-sm); justify-content: flex-end; }
+
+/* Hover lift utility for cards */
+.card.surface-hover:hover { transform: translateY(-6px); box-shadow: var(--shadow-2); }
+
+/* ==========================================================================
+   3. Sticky Notes
+   - .note (paper-like sticky)
+   - small handwritten accent, slight rotation, pin pseudo-element
+   ========================================================================== */
+.note {
+  background: linear-gradient(180deg, rgba(255,250,245,0.98), rgba(255,248,246,0.98));
+  border-radius: var(--note-radius);
+  padding: var(--space-md);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transform: rotate(-1.5deg);
+  position: relative;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* Pin */
+.note::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: -8px;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 30% 30%, #fff, #ffdce8);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* Handwritten title inside note */
+.note .note-title {
+  font-family: var(--font-handwritten);
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+
+/* ==========================================================================
+   4. Glass Cards (specialized)
+   - .glass-card (thin glass surface)
+   - .glass-card--accent (soft pastel tint)
+   ========================================================================== */
+.glass-card {
+  background: var(--glass-bg-1, rgba(255,255,255,0.55));
+  border-radius: var(--card-radius);
+  padding: var(--space-md);
+  border: var(--glass-border, 1px solid rgba(255,255,255,0.35));
+  backdrop-filter: var(--glass-backdrop);
+  box-shadow: var(--shadow-1);
+}
+.glass-card--accent {
+  background: linear-gradient(180deg, rgba(255,220,232,0.45), rgba(231,216,255,0.35));
+}
+
+/* ==========================================================================
+   5. Timeline Cards (reusable)
+   - .timeline-card (compact entry)
+   - .timeline-card .meta, .timeline-card .content
+   ========================================================================== */
+.timeline-card {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+  padding: var(--space-sm);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: var(--shadow-1);
+}
+.timeline-card .meta {
+  min-width: 56px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+.timeline-card .content {
+  flex: 1;
+}
+
+/* ==========================================================================
+   6. Memory Cards (diary entries)
+   - .memory-card (image + caption + date)
+   - .memory-card .caption (handwritten)
+   ========================================================================== */
+.memory-card {
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.6);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--anim-medium) var(--ease-soft), box-shadow var(--anim-medium);
+}
+.memory-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-2); }
+
+.memory-card .memory-media { display: block; width: 100%; height: auto; }
+.memory-card .memory-caption {
+  padding: var(--space-sm);
+  font-family: var(--font-handwritten);
+  font-size: 1.05rem;
+  color: var(--color-text);
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.55));
+}
+
+/* ==========================================================================
+   7. Flash Cards (interactive)
+   - .flashcard (3D flip container)
+   - .flashcard__face, .flashcard--flipped
+   ========================================================================== */
+.flashcard {
+  width: 100%;
+  max-width: 320px;
+  height: 200px;
+  perspective: 1000px;
+  border-radius: 12px;
+}
+.flashcard__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 700ms var(--ease-soft);
+}
+.flashcard--flipped .flashcard__inner { transform: rotateY(180deg); }
+
+.flashcard__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  box-shadow: var(--shadow-1);
+  background: rgba(255,255,255,0.85);
+}
+.flashcard__face--back {
+  transform: rotateY(180deg);
+  background: linear-gradient(180deg, rgba(231,216,255,0.9), rgba(255,220,232,0.9));
+}
+
+/* Accessibility: focus ring for interactive cards */
+.flashcard:focus-within { outline: none; box-shadow: 0 0 0 var(--focus-width, 4px) var(--focus-color, rgba(106,27,154,0.12)); }
+
+/* ==========================================================================
+   8. Quote Cards
+   - .quote-card (large quote with handwritten attribution)
+   ========================================================================== */
+.quote-card {
+  padding: var(--space-lg);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.55));
+  box-shadow: var(--shadow-2);
+  font-style: italic;
+  font-family: var(--font-heading);
+  color: var(--color-text);
+}
+.quote-card .quote-text { font-size: 1.25rem; line-height: 1.5; }
+.quote-card .quote-author {
+  margin-top: var(--space-sm);
+  font-family: var(--font-handwritten);
+  font-size: 1.05rem;
+  color: var(--color-muted);
+}
+
+/* ==========================================================================
+   9. Music Controls
+   - .music-control (container)
+   - .music-play, .music-stop, .music-volume
+   - use accessible labels and focus states
+   ========================================================================== */
+.music-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(0,0,0,0.03);
+}
+.music-control button {
+  width: var(--control-size);
+  height: var(--control-size);
+  display: inline-grid;
+  place-items: center;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--anim-fast), background var(--anim-fast);
+}
+.music-control button:hover { transform: translateY(-3px); }
+.music-control input[type="range"] {
+  width: 120px;
+  accent-color: var(--accent-cool, #BFA8FF);
+}
+
+/* ==========================================================================
+   10. Toggle Switch (accessible)
+   - .toggle (wrapper)
+   - .toggle__input (hidden checkbox)
+   - .toggle__track, .toggle__thumb
+   ========================================================================== */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+.toggle__input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.toggle__track {
+  width: 56px;
+  height: 30px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 999px;
+  position: relative;
+  transition: background var(--anim-fast);
+}
+.toggle__thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: left var(--anim-fast) var(--ease-soft), background var(--anim-fast);
+}
+.toggle__input:checked + .toggle__track {
+  background: linear-gradient(90deg, var(--color-blush, #FFDCE8), var(--color-lavender, #E7D8FF));
+}
+.toggle__input:checked + .toggle__track .toggle__thumb {
+  left: calc(100% - 24px);
+}
+
+/* Focus-visible */
+.toggle__input:focus-visible + .toggle__track { box-shadow: 0 0 0 var(--focus-width, 4px) var(--focus-color, rgba(106,27,154,0.12)); }
+
+/* ==========================================================================
+   11. Envelope Component (letter preview)
+   - .envelope (closed state)
+   - .envelope.open (revealed letter)
+   - purely presentational; JS toggles .open
+   ========================================================================== */
+.envelope {
+  width: 220px;
+  height: 140px;
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,250,248,1), rgba(255,245,243,1));
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.04);
+  overflow: hidden;
+  transition: transform var(--anim-medium), box-shadow var(--anim-medium);
+}
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(135deg, rgba(255,220,232,0.06) 0%, rgba(191,168,255,0.04) 100%);
+  pointer-events: none;
+}
+.envelope .flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(180deg, rgba(255,240,240,0.98), rgba(255,250,250,0.98));
+  transform-origin: top center;
+  transition: transform 420ms var(--ease-soft);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.envelope.open .flap { transform: rotateX(180deg) translateY(-10%); }
+
+/* Letter inside */
+.envelope .letter {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  top: 40%;
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  padding: var(--space-sm);
+  font-family: var(--font-handwritten);
+  font-size: 0.98rem;
+  color: var(--color-text);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transform: translateY(6px);
+  transition: transform 420ms var(--ease-soft), opacity 420ms;
+  opacity: 0;
+}
+.envelope.open .letter { transform: translateY(0); opacity: 1; }
+
+/* ==========================================================================
+   12. Modal (accessible)
+   - .modal (overlay)
+   - .modal__dialog (centered)
+   - .modal--open toggled by JS
+   ========================================================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,10,0.28);
+  z-index: var(--z-modal, 100);
+  padding: var(--space-lg);
+}
+.modal.modal--open {
+  display: flex;
+  animation: modalFadeIn var(--anim-medium) var(--ease-soft) both;
+}
+@keyframes modalFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.modal__dialog {
+  width: 100%;
+  max-width: var(--modal-max-width);
+  border-radius: 16px;
+  background: var(--glass-surface, rgba(255,255,255,0.9));
+  box-shadow: var(--shadow-3, 0 18px 40px rgba(0,0,0,0.12));
+  padding: var(--space-lg);
+  position: relative;
+}
+
+/* Close button */
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal__close:focus-visible { box-shadow: 0 0 0 var(--focus-width, 4px) var(--focus-color, rgba(106,27,154,0.12)); }
+
+/* ==========================================================================
+   13. Tooltips (simple, accessible)
+   - .tooltip (wrapper)
+   - .tooltip__text (hidden by default, shown on hover/focus)
+   ========================================================================== */
+.tooltip { position: relative; display: inline-block; }
+.tooltip__text {
+  position: absolute;
+  bottom: calc(100% + var(--tooltip-gap));
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(0,0,0,0.78);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--anim-fast), transform var(--anim-fast);
+  z-index: var(--z-tooltip, 200);
+}
+.tooltip:hover .tooltip__text,
+.tooltip:focus-within .tooltip__text {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Arrow */
+.tooltip__text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: rgba(0,0,0,0.78);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   14. Section Titles
+   - .section-title (heading + decorative underline)
+   ========================================================================== */
+.section-title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-md);
+}
+.section-title h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  margin: 0;
+}
+.section-title .decor {
+  width: 56px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-blush, #FFDCE8), var(--color-lavender, #E7D8FF));
+  opacity: 0.95;
+}
+
+/* ==========================================================================
+   15. Footer (minimal)
+   - .site-footer
+   ========================================================================== */
+.site-footer {
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02));
+  border-top: 1px solid rgba(0,0,0,0.02);
+}
+
+/* ==========================================================================
+   16. Icon helpers
+   - .icon (base), size modifiers, color utilities
+   ========================================================================== */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size-md, 24px);
+  height: var(--icon-size-md, 24px);
+  font-size: 1rem;
+  color: var(--color-text);
+  transition: transform var(--anim-fast), color var(--anim-fast);
+}
+.icon--lg { width: var(--icon-size-lg, 36px); height: var(--icon-size-lg, 36px); font-size: 1.25rem; }
+.icon--sm { width: var(--icon-size-sm, 18px); height: var(--icon-size-sm, 18px); font-size: 0.85rem; }
+
+/* Accent color helpers */
+.icon--accent { color: var(--accent-warm, #FF9FB3); }
+.icon--muted { color: var(--color-muted); }
+
+/* ==========================================================================
+   17. Interaction & Accessibility notes
+   - Keep motion soft; respect reduced-motion preference
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .card, .btn, .flashcard__inner, .modal, .tooltip__text, .note, .envelope .flap {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   18. Developer notes
+   - This file intentionally avoids page-specific selectors.
+   - Use these components as building blocks across pages.
+   - For any layout-specific overrides, create a page-level CSS module.
+   ========================================================================== */

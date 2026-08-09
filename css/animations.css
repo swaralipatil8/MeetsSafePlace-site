@@ -1,0 +1,380 @@
+/* ==========================================================================
+   Meet's Safe Place — animations.css
+   Purpose: Centralized, performance-minded CSS animations and utility classes
+            for subtle, diary-like motion across the site.
+   Notes:
+   - Import after variables.css and style.css so tokens like --anim-medium are available.
+   - These are utilities only — apply classes where needed (no page-specific rules).
+   - Animations use transform and opacity where possible for GPU compositing.
+   - Respect prefers-reduced-motion: all animations are reduced or disabled.
+   ========================================================================== */
+
+/* ==========================================================================
+   0. Animation timing tokens (fallbacks if variables.css not loaded)
+   ========================================================================== */
+:root {
+  --anim-fast: 180ms;
+  --anim-medium: 420ms;
+  --anim-slow: 900ms;
+  --ease-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --float-duration: 10s;
+  --float-distance: 22px;
+  --ripple-duration: 560ms;
+  --breath-duration: 4200ms;
+  --page-duration: 420ms;
+}
+
+/* ==========================================================================
+   1. Reduced motion preference
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .anim,
+  .anim-*,
+  .float,
+  .float-slow,
+  .petal,
+  .star,
+  .breath,
+  .card-flip,
+  .envelope-open,
+  .page-transition,
+  .ripple,
+  .cursor-glow,
+  .rain,
+  .leaf-drift {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ==========================================================================
+   2. Fade animations
+   - fade-in, fade-up, fade-left, fade-right
+   - Use for content entrance and subtle transitions
+   ========================================================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-in {
+  opacity: 0;
+  animation: fadeIn var(--anim-medium) var(--ease-soft) both;
+  will-change: opacity, transform;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-up {
+  opacity: 0;
+  animation: fadeUp var(--anim-medium) var(--ease-soft) both;
+  will-change: opacity, transform;
+}
+
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.anim-fade-left {
+  opacity: 0;
+  animation: fadeLeft var(--anim-medium) var(--ease-soft) both;
+  will-change: opacity, transform;
+}
+
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.anim-fade-right {
+  opacity: 0;
+  animation: fadeRight var(--anim-medium) var(--ease-soft) both;
+  will-change: opacity, transform;
+}
+
+/* ==========================================================================
+   3. Zoom (gentle)
+   ========================================================================== */
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.985); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.anim-zoom {
+  opacity: 0;
+  animation: zoomIn var(--anim-medium) var(--ease-soft) both;
+  will-change: opacity, transform;
+}
+
+/* ==========================================================================
+   4. Float (slow vertical motion)
+   - Use for decorative elements (petals, lights, shapes)
+   ========================================================================== */
+@keyframes float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(calc(-1 * var(--float-distance))); }
+  100% { transform: translateY(0); }
+}
+.float {
+  animation: float var(--float-duration) var(--ease-soft) infinite;
+  will-change: transform;
+}
+
+/* Slightly slower variant */
+.float-slow {
+  animation: float calc(var(--float-duration) * 1.4) var(--ease-soft) infinite;
+}
+
+/* ==========================================================================
+   5. Floating Petals (subtle multi-axis motion)
+   - Utility class .petal with randomized transform origin recommended
+   ========================================================================== */
+@keyframes petalDrift {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 0.95; }
+  50%  { transform: translate3d(-8px, -18px, 0) rotate(8deg) scale(0.98); opacity: 1; }
+  100% { transform: translate3d(6px, 0, 0) rotate(-6deg) scale(1); opacity: 0.95; }
+}
+.petal {
+  animation: petalDrift calc(var(--float-duration) * 0.9) var(--ease-soft) infinite;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   6. Floating Stars (gentle twinkle + float)
+   ========================================================================== */
+@keyframes starTwinkle {
+  0%   { opacity: 0.6; transform: scale(0.98) translateY(0); }
+  50%  { opacity: 1; transform: scale(1.06) translateY(-8px); }
+  100% { opacity: 0.6; transform: scale(0.98) translateY(0); }
+}
+.star {
+  animation: starTwinkle calc(var(--float-duration) * 0.6) var(--ease-soft) infinite;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   7. Breathing effect (for calm corner)
+   - slow scale + opacity loop to guide breathing visuals
+   ========================================================================== */
+@keyframes breathe {
+  0%   { transform: scale(0.98); opacity: 0.85; }
+  40%  { transform: scale(1.03); opacity: 1; }
+  60%  { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(0.98); opacity: 0.85; }
+}
+.breath {
+  animation: breathe var(--breath-duration) var(--ease-soft) infinite;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   8. Card Flip (3D)
+   - Utility classes for interactive flashcards
+   - HTML structure expected:
+     <div class="flip-3d">
+       <div class="flip-3d__inner"> <div class="flip-3d__front">...</div> <div class="flip-3d__back">...</div> </div>
+     </div>
+   ========================================================================== */
+.flip-3d {
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+.flip-3d__inner {
+  transform-style: preserve-3d;
+  transition: transform 700ms var(--ease-soft);
+  will-change: transform;
+}
+.flip-3d.is-flipped .flip-3d__inner {
+  transform: rotateY(180deg);
+}
+.flip-3d__face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+.flip-3d__back {
+  transform: rotateY(180deg);
+}
+
+/* ==========================================================================
+   9. Envelope Opening (presentational)
+   - Use .envelope and toggle .is-open to animate
+   ========================================================================== */
+@keyframes envelopeOpen {
+  0%   { transform: rotateX(0deg) translateY(0); opacity: 1; }
+  60%  { transform: rotateX(-120deg) translateY(-6%); opacity: 1; }
+  100% { transform: rotateX(-180deg) translateY(-10%); opacity: 1; }
+}
+.envelope-anim .flap {
+  transform-origin: top center;
+  transition: transform 520ms var(--ease-soft);
+}
+.envelope-anim.is-open .flap {
+  animation: envelopeOpen 520ms var(--ease-soft) both;
+}
+
+/* ==========================================================================
+   10. Page Transition (soft fade + slide)
+   - Use on page wrapper elements for route-like transitions
+   ========================================================================== */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pageExit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+.page-enter {
+  animation: pageEnter var(--page-duration) var(--ease-soft) both;
+}
+.page-exit {
+  animation: pageExit var(--page-duration) var(--ease-soft) both;
+}
+
+/* ==========================================================================
+   11. Button Ripple (CSS-only utility)
+   - Use .ripple-container on a button; JS can create .ripple elements dynamically,
+     but a CSS-only fallback uses :after for a single ripple.
+   - For multiple ripples or precise coordinates, prefer JS to inject .ripple elements.
+   ========================================================================== */
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.ripple-container::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.45);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform var(--ripple-duration) var(--ease-soft), opacity var(--ripple-duration) var(--ease-soft);
+  pointer-events: none;
+}
+.ripple-container:active::after {
+  transform: translate(-50%, -50%) scale(40);
+  opacity: 0.12;
+  transition: transform var(--ripple-duration) var(--ease-soft), opacity var(--ripple-duration) var(--ease-soft);
+}
+
+/* ==========================================================================
+   12. Cursor Glow (utility)
+   - Use .cursor-glow on containers to enable a subtle radial glow that follows
+     CSS variables --cursor-x and --cursor-y (set by JS for best effect).
+   ========================================================================== */
+.cursor-glow {
+  position: relative;
+  overflow: visible;
+}
+.cursor-glow::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--cursor-x, 50%) - 40%);
+  top: calc(var(--cursor-y, 50%) - 40%);
+  width: 160%;
+  height: 160%;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--cursor-x, 50%) var(--cursor-y, 50%), rgba(255,255,255,0.06), transparent 18%);
+  opacity: 0;
+  transition: opacity 260ms var(--ease-soft), transform 260ms var(--ease-soft);
+  transform-origin: center;
+  border-radius: 50%;
+  will-change: opacity, transform;
+}
+.cursor-glow:hover::before,
+.cursor-glow:focus-within::before {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   13. Rain Animation (decorative)
+   - Use on a full-bleed decorative layer; keep opacity low for subtlety.
+   - Pure CSS: many thin linear-gradient streaks animated with translateY.
+   - For performance, keep element count low and use background-position animation.
+   ========================================================================== */
+@keyframes rainFall {
+  0%   { background-position: 0 -10vh, 0 0; }
+  100% { background-position: 0 110vh, 0 120vh; }
+}
+/* Utility class to apply a subtle rain overlay */
+.rain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(transparent 60%, rgba(255,255,255,0.02) 61%, rgba(255,255,255,0.02) 62%),
+    linear-gradient(transparent 60%, rgba(255,255,255,0.02) 61%, rgba(255,255,255,0.02) 62%);
+  background-size: 2px 24px, 3px 36px;
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  animation: rainFall 12s linear infinite;
+  will-change: background-position;
+}
+
+/* ==========================================================================
+   14. Leaf Drift (decorative lateral drift)
+   - Use for leaves or petals drifting horizontally
+   ========================================================================== */
+@keyframes leafDrift {
+  0%   { transform: translate3d(-6px, 0, 0) rotate(-6deg); opacity: 0.95; }
+  50%  { transform: translate3d(18px, -18px, 0) rotate(6deg); opacity: 1; }
+  100% { transform: translate3d(-6px, -6px, 0) rotate(-4deg); opacity: 0.95; }
+}
+.leaf-drift {
+  animation: leafDrift calc(var(--float-duration) * 1.1) var(--ease-soft) infinite;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   15. Card entrance micro-interaction (soft pop)
+   - Use .card-pop for subtle attention without being flashy
+   ========================================================================== */
+@keyframes cardPop {
+  0%   { transform: translateY(6px) scale(0.995); opacity: 0; }
+  60%  { transform: translateY(-4px) scale(1.01); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.card-pop {
+  animation: cardPop var(--anim-medium) var(--ease-soft) both;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   16. Soft focus pulse (for subtle attention)
+   - Use sparingly on focusable elements
+   ========================================================================== */
+@keyframes softPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(191,168,255,0.06); }
+  70%  { box-shadow: 0 0 0 8px rgba(191,168,255,0.02); }
+  100% { box-shadow: 0 0 0 0 rgba(191,168,255,0.00); }
+}
+.soft-pulse:focus-within {
+  animation: softPulse 1200ms var(--ease-soft) both;
+}
+
+/* ==========================================================================
+   17. Utility classes for animation control
+   - delay helpers and infinite/once toggles
+   ========================================================================== */
+.anim-delay-100 { animation-delay: 100ms !important; }
+.anim-delay-200 { animation-delay: 200ms !important; }
+.anim-delay-300 { animation-delay: 300ms !important; }
+.anim-once { animation-iteration-count: 1 !important; }
+.anim-infinite { animation-iteration-count: infinite !important; }
+
+/* ==========================================================================
+   18. Performance & developer notes
+   - Prefer transform and opacity for smooth GPU-accelerated animations.
+   - Avoid animating layout properties (width/height/top/left) on frequently
+     used elements. Use translate/scale/opacity instead.
+   - For complex decorative scenes (many petals/stars), limit DOM nodes and
+     reuse background-image animations where possible.
+   - For cursor-follow effects, update CSS variables via requestAnimationFrame
+     in JS to keep motion smooth.
+   ========================================================================== */

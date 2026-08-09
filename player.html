@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Persistent Audio Player</title>
+  <style>
+    /* keep page visually minimal */
+    html,body{height:100%;margin:0;background:transparent}
+  </style>
+</head>
+<body>
+  <!-- Single audio element (looping ambient piano) -->
+  <audio id="persistent-audio" loop preload="metadata" crossorigin="anonymous">
+    <source src="/assets/audio/my-piano.mp3" type="audio/mpeg">
+    <!-- optional fallback -->
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    (function () {
+      const CHANNEL = 'msp-audio';
+      const audio = document.getElementById('persistent-audio');
+      audio.volume = 0.7;
+
+      // Fade helper (simple)
+      function fadeTo(target, duration = 420) {
+        return new Promise(resolve => {
+          const steps = 12;
+          const stepTime = Math.max(16, Math.floor(duration / steps));
+          const start = audio.volume;
+          let step = 0;
+          const id = setInterval(() => {
+            step++;
+            const t = step / steps;
+            audio.volume = Math.max(0, start + (target - start) * t);
+            if (step >= steps) {
+              clearInterval(id);
+              audio.volume = target;
+              resolve();
+            }
+          }, stepTime);
+        });
+      }
+
+      // Message handler from parent pages
+      window.addEventListener('message', async (ev) => {
+        const msg = ev.data || {};
+        if (msg.channel !== CHANNEL) return;
+
+        try {
+          if (msg.cmd === 'play') {
+            // try to play; fade to requested volume (or default)
+            await audio.play().catch(()=>{});
+            await fadeTo(typeof msg.volume === 'number' ? msg.volume : 0.7, 420);
+            ev.source && ev.source.postMessage({ channel: CHANNEL, status: 'playing' }, ev.origin || '*');
+          } else if (msg.cmd === 'pause') {
+            await fadeTo(0, 320);
+            audio.pause();
+            audio.currentTime = 0;
+            ev.source && ev.source.postMessage({ channel: CHANNEL, status: 'paused' }, ev.origin || '*');
+          } else if (msg.cmd === 'setVolume') {
+            audio.volume = Math.max(0, Math.min(1, Number(msg.volume) || 0.7));
+            ev.source && ev.source.postMessage({ channel: CHANNEL, status: 'volume', volume: audio.volume }, ev.origin || '*');
+          } else if (msg.cmd === 'status') {
+            ev.source && ev.source.postMessage({ channel: CHANNEL, status: audio.paused ? 'paused' : 'playing', volume: audio.volume }, ev.origin || '*');
+          }
+        } catch (err) {
+          // respond with error state
+          ev.source && ev.source.postMessage({ channel: CHANNEL, status: 'error', error: String(err) }, ev.origin || '*');
+        }
+      }, false);
+
+      // Notify opener (if any) that player is ready
+      try { window.opener && window.opener.postMessage({ channel: CHANNEL, status: 'ready' }, '*'); } catch(e){}
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+
+/* ==========================================================================
+   Meet's Safe Place — variables.css
+   Purpose: Centralized CSS custom properties for theme, spacing, layout,
+            animations, and glassmorphism. Import this file first in your
+            stylesheet pipeline so all other modules can consume these vars.
+   Author: Swarali (design system)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Core Colors
+   ========================================================================== */
+/* Pastel palette and semantic color tokens */
+:root {
+  /* Primary Pastels */
+  --color-cream: #FFF9F7;
+  --color-blush: #FFDCE8;
+  --color-lavender: #E7D8FF;
+  --color-sage: #DCEFD8;
+  --color-soft-cream: #FDF6F0;
+
+  /* Neutrals */
+  --color-text: #4B4B4B;
+  --color-muted: #7A7A7A;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* Accents (subtle) */
+  --accent-warm: #FF9FB3;    /* slightly stronger blush */
+  --accent-cool: #BFA8FF;    /* slightly stronger lavender */
+
+  /* Semantic */
+  --bg-page: var(--color-cream);
+  --card-bg: rgba(255,255,255,0.6); /* used with backdrop-filter for glass */
+  --glass-overlay: rgba(255,255,255,0.45);
+  --focus-ring: rgba(106,27,154,0.12); /* soft purple focus */
+}
+
+/* ==========================================================================
+   2. Typography
+   ========================================================================== */
+/* Font stacks and scale tokens */
+:root {
+  /* Font families (load via Google Fonts in HTML) */
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-handwritten: "Dancing Script", "Brush Script MT", cursive;
+
+  /* Base sizes */
+  --type-base: 16px;            /* root font-size fallback */
+  --type-scale-0: 0.875rem;     /* small captions */
+  --type-scale-1: 1rem;         /* body */
+  --type-scale-2: 1.125rem;     /* lead / subtitle */
+  --type-scale-3: 1.5rem;       /* section headings */
+  --type-scale-4: 2.25rem;      /* page title */
+  --type-scale-5: 3rem;         /* hero title */
+
+  /* Line heights */
+  --leading-tight: 1.15;
+  --leading-normal: 1.6;
+  --leading-loose: 1.9;
+
+  /* Letter spacing */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em;
+}
+
+/* ==========================================================================
+   3. Spacing System
+   ========================================================================== */
+/* 4-step spacing scale (modular, responsive-friendly) */
+:root {
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 20px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-xxl: 72px;
+
+  /* Container padding defaults */
+  --container-padding: var(--space-lg);
+  --container-padding-sm: var(--space-md);
+}
+
+/* ==========================================================================
+   4. Radii, Borders, and Elevation
+   ========================================================================== */
+:root {
+  /* Border radius tokens */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  /* Border */
+  --border-soft: 1px solid rgba(75,75,75,0.04);
+
+  /* Shadows (soft, premium) */
+  --shadow-1: 0 6px 18px rgba(0,0,0,0.06);
+  --shadow-2: 0 10px 30px rgba(0,0,0,0.09);
+  --shadow-3: 0 18px 40px rgba(0,0,0,0.12);
+}
+
+/* ==========================================================================
+   5. Glassmorphism & Blur
+   ========================================================================== */
+:root {
+  /* Glass background presets */
+  --glass-bg-1: rgba(255,255,255,0.55);
+  --glass-bg-2: rgba(255,255,255,0.42);
+
+  /* Backdrop blur values */
+  --blur-xs: 4px;
+  --blur-sm: 8px;
+  --blur-md: 12px;
+  --blur-lg: 20px;
+
+  /* Combined glass shorthand (use with background + backdrop-filter) */
+  --glass-surface: var(--glass-bg-1);
+  --glass-backdrop: blur(var(--blur-md));
+}
+
+/* ==========================================================================
+   6. Transitions & Animation
+   ========================================================================== */
+:root {
+  /* Animation timing */
+  --anim-fast: 180ms;
+  --anim-medium: 420ms;
+  --anim-slow: 900ms;
+
+  /* Easing */
+  --ease-in-out: cubic-bezier(0.22, 0.9, 0.36, 1);
+  --ease-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Floating motion */
+  --float-distance: 22px;
+  --float-duration: 10s;
+}
+
+/* ==========================================================================
+   7. Layout & Containers
+   ========================================================================== */
+:root {
+  /* Max container widths */
+  --container-width: 1100px;
+  --container-width-lg: 900px;
+  --container-width-md: 720px;
+
+  /* Breakpoints */
+  --bp-xs: 360px;
+  --bp-sm: 600px;
+  --bp-md: 900px;
+  --bp-lg: 1200px;
+  --bp-xl: 1440px;
+
+  /* Z-index scale */
+  --z-base: 0;
+  --z-surface: 10;
+  --z-overlay: 50;
+  --z-modal: 100;
+  --z-tooltip: 200;
+}
+
+/* ==========================================================================
+   8. Cursor, Focus, and Accessibility
+   ========================================================================== */
+:root {
+  /* Focus ring thickness and color */
+  --focus-width: 4px;
+  --focus-color: var(--focus-ring);
+
+  /* Reduced motion preference fallback durations */
+  --reduced-motion-duration: 50ms;
+}
+
+/* ==========================================================================
+   9. Utility Tokens (small helpers)
+   ========================================================================== */
+:root {
+  --glass-border: 1px solid rgba(255,255,255,0.35);
+  --paper-texture-opacity: 0.04; /* for subtle paper overlay */
+  --icon-size-sm: 18px;
+  --icon-size-md: 24px;
+  --icon-size-lg: 36px;
+}
+
+/* ==========================================================================
+   10. Example usage snippets (commented)
+   ========================================================================== */
+/*
+  Example: glass card
+  .card {
+    background: var(--glass-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-1);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    padding: var(--space-md);
+  }
+
+  Example: hero title
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: var(--type-scale-5);
+    line-height: var(--leading-tight);
+    color: var(--color-text);
+  }
+
+  Example: floating shape animation
+  .floating {
+    animation: float var(--float-duration) var(--ease-soft) infinite alternate;
+  }
+*/
+
+/* ==========================================================================
+   End of variables.css
+   ========================================================================== */
